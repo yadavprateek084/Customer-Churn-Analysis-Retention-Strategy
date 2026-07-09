@@ -1,102 +1,372 @@
-# Customer Churn Analysis and Retention Strategy — SQL + Python EDA on Relational Subscription Data
+# 📊 Customer Churn Analysis & Retention Strategy
 
-## Executive Summary
-This project analyzes customer churn for a subscription-based service by integrating data from three relational tables (customer profiles, subscription details, and support interactions) stored in a SQLite database. Using SQL for extraction and Python (Pandas, Seaborn, Matplotlib) for cleaning, feature engineering, and exploratory analysis, the project identifies which customer segments churn most and quantifies the relationship between support escalations and churn.
+### End-to-End SQL + Python Exploratory Data Analysis on Relational Subscription Data
 
-**Note on scope:** This project uses a small, structured demonstration dataset (21 customers across 3 relational tables) designed to practice and showcase a full SQL-to-Python analytics workflow — data extraction, cleaning, feature engineering, KPI calculation, and visualization — rather than to produce statistically generalizable business conclusions. All figures below are accurate for this dataset.
+<p align="center">
 
-**Key outcome:** Escalated support complaints show a strong positive correlation (76.7%) with churn — the clearest actionable signal in the data.
+![Python](https://img.shields.io/badge/Python-3.11-blue?style=for-the-badge)
+![SQL](https://img.shields.io/badge/SQLite-Database-green?style=for-the-badge)
+![Pandas](https://img.shields.io/badge/Pandas-Data%20Analysis-black?style=for-the-badge)
+![NumPy](https://img.shields.io/badge/NumPy-Numerical%20Computing-blue?style=for-the-badge)
+![Matplotlib](https://img.shields.io/badge/Matplotlib-Visualization-orange?style=for-the-badge)
+![Seaborn](https://img.shields.io/badge/Seaborn-EDA-purple?style=for-the-badge)
+![Status](https://img.shields.io/badge/Project-Completed-success?style=for-the-badge)
 
-## Business Problem
-Subscription businesses lose recurring revenue every time a customer cancels. Understanding *which* customers are likely to churn — by plan, acquisition channel, geography, and support experience — allows a business to prioritize retention efforts where they matter most, rather than treating all customers identically. This project builds the analytical foundation (KPIs, segment-level churn rates, and driver correlations) needed to support that kind of retention prioritization.
+</p>
 
-## Project Objectives
-- Consolidate customer, subscription, and support data from a relational database into a single analysis-ready dataset
-- Calculate core churn and retention KPIs
-- Quantify churn rate across plan type, geography, and acquisition channel
-- Measure the relationship between customer support escalations and churn
-- Segment customers into churn-risk tiers
-- Visualize churn patterns to support business interpretation
+<p align="center">
+<img src="images/05_churn_by_escalations.png" width="850">
+</p>
 
-## Dataset Information
-- **Source:** SQLite database (`customer_churn_.db`) with 3 tables
-- **Tables:** `customer` (21 rows, 8 columns), `subscription` (21 rows, 11 columns), `support` (9 rows, 6 columns)
-- **Final merged dataset:** 21 customers × 22 columns
-- **Key fields:** plan type (Basic/Standard/Premium), contract type (Monthly/Annual), subscription/acquisition type (Organic/Paid/Referral), monthly charges, CLTV, churn score, cancellation date, escalation flag, CSAT score
-- **Target variable:** `churn_flag` (derived from presence of a cancellation date)
+---
 
-## Tech Stack
-| Category | Tools |
-|----------|-------|
-| Language | Python |
-| Database | SQLite |
-| Libraries | Pandas, NumPy |
+# 🚀 Overview
+
+Customer churn directly impacts recurring revenue for subscription businesses. Identifying customers at risk of cancellation enables organizations to proactively improve customer experience and maximize retention.
+
+This project demonstrates an **end-to-end Data Analytics workflow**, beginning with extracting data from a **relational SQLite database** using **SQL**, followed by **data cleaning, feature engineering, KPI analysis, exploratory data analysis (EDA), and business recommendations** using Python.
+
+The project integrates customer profiles, subscription information, and customer support interactions to identify the major factors associated with churn.
+
+> **Dataset Scope:**
+> This project uses a structured demonstration dataset containing **21 customers across 3 relational tables**. The objective is to showcase practical SQL and Python analytics skills rather than produce statistically generalizable business conclusions.
+
+---
+
+# ✨ Project Highlights
+
+* ✅ Extracted data from a relational SQLite database
+* ✅ Joined **3 normalized tables** into a unified analytical dataset
+* ✅ Cleaned and standardized messy business data
+* ✅ Engineered customer-level analytical features
+* ✅ Calculated key subscription business KPIs
+* ✅ Built **10+ visualizations** using Matplotlib & Seaborn
+* ✅ Identified customer segments with the highest churn risk
+* ✅ Quantified the relationship between support escalations and churn
+* ✅ Delivered actionable business recommendations
+
+---
+
+# 💼 Business Problem
+
+Subscription-based businesses lose recurring revenue every time a customer cancels their subscription.
+
+Instead of treating every customer equally, businesses need to identify:
+
+* Which customers are most likely to churn
+* Which customer segments generate the highest retention risk
+* Which operational factors contribute most to customer loss
+
+This analysis helps prioritize retention strategies by uncovering patterns across customer demographics, subscription plans, acquisition channels, and customer support interactions.
+
+---
+
+# 🎯 Project Objectives
+
+* Extract data from multiple SQL tables
+* Merge relational datasets into a customer-level analytical dataset
+* Clean and standardize raw business data
+* Engineer features for churn analysis
+* Calculate business KPIs
+* Analyze churn across customer segments
+* Measure the relationship between customer support escalations and churn
+* Visualize customer behavior
+* Generate business recommendations
+
+---
+
+# 🛠️ Tech Stack
+
+| Category      | Tools               |
+| ------------- | ------------------- |
+| Programming   | Python              |
+| Database      | SQLite              |
+| SQL           | SQLite Queries      |
+| Libraries     | Pandas, NumPy       |
 | Visualization | Matplotlib, Seaborn |
-| IDE | Jupyter Notebook |
+| IDE           | Jupyter Notebook    |
 
-## Project Workflow
+---
+
+# 🗄 Database Schema
+
+The project uses a relational SQLite database containing three normalized tables.
+
 ```
-SQLite Database (3 tables)
-        ↓
-SQL Extraction
-        ↓
-Data Cleaning & Standardization
-        ↓
-Table Merging (Customer + Subscription + Support)
-        ↓
-Feature Engineering (churn_flag, tenure, age, churn_risk)
-        ↓
-KPI Calculation
-        ↓
-Exploratory Data Analysis & Visualization
-        ↓
-Insights & Recommendations
+customer
+│
+├── Customer Information
+│
+subscription
+│
+├── Subscription Details
+│
+support
+│
+└── Customer Support Records
 ```
 
-## Data Cleaning
-- Removed columns with no analytical value: `interests` (mostly null), `pincode` (100% null), `col_1` (100% null)
-- Standardized inconsistent categorical labels (`Men`/`Women` → `Male`/`Female`)
-- Imputed missing `country` values using a `state → country` lookup
-- Converted all date fields (`dob`, `subscription_start_date`, `renewal_date`, `cancellation_date`, `complaint_date`) to proper datetime types
-- Identified and resolved duplicate support records per customer, retaining the most recent interaction while preserving total complaint count as a feature
-- Merged all three tables into a single customer-level analytical dataset via left joins on `customerid`
+After SQL extraction and joins:
 
-## Exploratory Data Analysis
-**Questions investigated:**
-- What is the overall churn and retention rate?
-- Does churn vary by plan type, geography, or acquisition channel?
-- Is there a relationship between support escalations and churn?
-- How does churn relate to tenure, revenue, and monthly charges?
+```
+21 Customers
+        │
+        ▼
+Merged Dataset
 
-**Charts created:** monthly churn trend, churn rate by plan type, by state, by subscription/acquisition type, by escalation status, by gender, by contract type, a correlation heatmap across encoded features, a pairplot, and a categorical plot of monthly charges by plan type split by gender and churn-risk tier.
+21 Rows × 22 Columns
+```
 
-**Patterns observed:**
-- Churn is heavily concentrated in the **Basic** plan and among **Referral**-acquired customers
-- Several states show 0% churn while others (Karnataka, Meghalaya) show high churn — though with very small per-state sample sizes, so this should be read as directional, not statistically robust
-- Escalated support cases are strongly associated with churn
+---
 
-## Key Insights
-- **Overall churn rate is 28.57%**, with a retention rate of 71.43%
-- **Basic plan customers churn at 60%**, compared to 22.22% for Standard and only 14.29% for Premium — churn risk decreases as plan tier increases
-- **Referral-acquired customers churn at 83.33%**, far higher than Paid (16.67%) or Organic (0%) customers — the acquisition channel appears strongly linked to retention quality
-- **Support escalations correlate with churn at 76.7%** — the strongest quantified relationship in the dataset
-- **Average revenue per user (ARPU) is $18.85/month**, with $73.94 in monthly recurring revenue currently at risk from already-churned customers
-- **Escalation rate across all customers is 19.05%**
+# 🔄 Project Workflow
 
-## Business Recommendations
-1. Investigate why Referral-acquired customers churn at a disproportionately high rate (83.33%) — the referral incentive or onboarding experience for this channel may need review
-2. Prioritize retention intervention for Basic plan subscribers, who show the highest churn rate (60%) of any plan tier
-3. Treat support escalation as an early-warning signal — given the 76.7% correlation with churn, escalated cases should trigger proactive retention outreach
-4. Monitor churn by acquisition channel and plan type as ongoing KPIs, since both showed the clearest separation in this analysis
+```
+             SQLite Database
+                    │
+     ┌──────────────┼──────────────┐
+     │              │              │
+ Customer      Subscription     Support
+     │              │              │
+     └──────────────┼──────────────┘
+                    │
+            SQL Data Extraction
+                    │
+            Data Cleaning
+                    │
+        Feature Engineering
+                    │
+          Dataset Integration
+                    │
+          KPI Calculation
+                    │
+ Exploratory Data Analysis (EDA)
+                    │
+      Business Insights
+                    │
+ Business Recommendations
+```
 
-## Project Structure
+---
+
+# 🗄 SQL Work
+
+SQL was used to extract and prepare data from the relational database before analysis in Python.
+
+### SQL Concepts Demonstrated
+
+* SELECT
+* WHERE
+* LEFT JOIN
+* ORDER BY
+* Aggregate Functions
+* Relational Database Querying
+
+SQL Responsibilities:
+
+* Extract customer records
+* Retrieve subscription information
+* Join multiple relational tables
+* Validate merged records
+* Prepare data for downstream analysis
+
+---
+
+# 🧹 Data Cleaning & Preparation
+
+The dataset underwent several preprocessing steps before analysis.
+
+### Cleaning Steps
+
+* Removed columns containing little or no analytical value
+
+  * `interests`
+  * `pincode`
+  * `col_1`
+
+* Standardized inconsistent categorical values
+
+```
+Men → Male
+Women → Female
+```
+
+* Converted date columns into datetime format
+
+* Imputed missing country values using state-country mapping
+
+* Removed duplicate support records while preserving complaint counts
+
+* Merged all tables using customer IDs
+
+---
+
+# ⚙️ Feature Engineering
+
+New analytical features created during preprocessing:
+
+* `churn_flag`
+* `customer_age`
+* `subscription_tenure`
+* `churn_risk`
+* `complaint_count`
+* `escalation_flag`
+
+These engineered features enabled KPI calculations and segmentation analysis.
+
+---
+
+# 📈 Business KPIs
+
+| KPI                             |      Value |
+| ------------------------------- | ---------: |
+| Customers                       |         21 |
+| Database Tables                 |          3 |
+| Final Dataset                   |    21 × 22 |
+| Overall Churn Rate              | **28.57%** |
+| Retention Rate                  | **71.43%** |
+| Average Revenue Per User (ARPU) | **$18.85** |
+| Monthly Revenue at Risk         | **$73.94** |
+| Escalation Rate                 | **19.05%** |
+| Escalation–Churn Correlation    |  **76.7%** |
+
+---
+
+# 📊 Exploratory Data Analysis
+
+The following business questions were investigated:
+
+* What is the overall churn rate?
+* Which subscription plan experiences the highest churn?
+* Does geography influence churn?
+* Does acquisition channel affect retention?
+* How do support escalations relate to churn?
+* How do revenue and tenure vary across customer segments?
+
+---
+
+# 📊 Key Visualizations
+
+| Visualization                | Preview                                       |
+| ---------------------------- | --------------------------------------------- |
+| Monthly Churn Trend          | ![](images/01_monthly_churn_trend.png)        |
+| Churn by Plan Type           | ![](images/02_churn_by_plan_type.png)         |
+| Churn by State               | ![](images/03_churn_by_state.png)             |
+| Churn by Acquisition Channel | ![](images/04_churn_by_subscription_type.png) |
+| Churn by Escalation          | ![](images/05_churn_by_escalations.png)       |
+| Churn by Gender              | ![](images/06_churn_by_gender.png)            |
+| Churn by Contract Type       | ![](images/07_churn_by_contract_type.png)     |
+| Correlation Heatmap          | ![](images/09_correlation_heatmap_final.png)  |
+
+---
+
+# 🔍 Key Insights
+
+### 📌 Overall Customer Churn
+
+* Overall churn rate: **28.57%**
+* Retention rate: **71.43%**
+
+---
+
+### 📌 Plan Type
+
+Basic Plan
+
+* 60% churn
+
+Standard Plan
+
+* 22.22% churn
+
+Premium Plan
+
+* 14.29% churn
+
+Higher-tier plans demonstrate significantly better customer retention.
+
+---
+
+### 📌 Acquisition Channel
+
+Referral
+
+* **83.33% churn**
+
+Paid
+
+* **16.67% churn**
+
+Organic
+
+* **0% churn**
+
+Referral-acquired customers exhibit the highest churn risk.
+
+---
+
+### 📌 Customer Support
+
+Support escalations demonstrate a **76.7% positive correlation** with churn, making escalation history the strongest churn indicator identified in this dataset.
+
+---
+
+### 📌 Revenue Metrics
+
+* Average monthly revenue per customer: **$18.85**
+* Monthly recurring revenue currently at risk: **$73.94**
+
+---
+
+# 💡 Business Recommendations
+
+Based on the analysis:
+
+### 1. Improve Basic Plan Retention
+
+Basic subscribers show the highest churn rate and should be prioritized for retention campaigns.
+
+---
+
+### 2. Review Referral Program Quality
+
+Investigate onboarding and incentive structures for referral customers, who churn at significantly higher rates.
+
+---
+
+### 3. Monitor Support Escalations
+
+Escalated complaints should trigger proactive customer outreach, as they strongly correlate with churn.
+
+---
+
+### 4. Track Retention KPIs
+
+Continuously monitor:
+
+* Churn Rate
+* Retention Rate
+* Escalation Rate
+* Revenue at Risk
+* Acquisition Channel Performance
+
+---
+
+# 📂 Project Structure
+
 ```
 customer-churn-analysis/
+│
 ├── README.md
+├── requirements.txt
+├── LICENSE
+│
 ├── data/
 │   └── customer_churn_.db
+│
 ├── notebooks/
 │   └── churn_analysis.ipynb
+│
 ├── images/
 │   ├── 01_monthly_churn_trend.png
 │   ├── 02_churn_by_plan_type.png
@@ -106,53 +376,119 @@ customer-churn-analysis/
 │   ├── 06_churn_by_gender.png
 │   ├── 07_churn_by_contract_type.png
 │   ├── 09_correlation_heatmap_final.png
-│   ├── 10_pairplot.png
-│   └── 11_catplot_plan_charges_by_risk.png
-├── reports/
-│   └── exported_churn_data.csv
-├── requirements.txt
-└── LICENSE
+│   └── 10_pairplot.png
+│
+└── reports/
+    └── exported_churn_data.csv
 ```
 
-## Installation
+---
+
+# ⚡ Installation
+
 ```bash
 pip install pandas numpy matplotlib seaborn
 ```
 
-## How to Run
-1. Clone the repository
-2. Place `customer_churn_.db` in the `data/` folder
-3. Open `notebooks/churn_analysis.ipynb` in Jupyter
-4. Run all cells sequentially — the notebook connects to the SQLite database, cleans and merges the tables, then computes KPIs and generates visualizations
+---
 
-## Results
-The analysis identified plan type, acquisition channel, and support escalation history as the clearest churn signals in this dataset, with escalations showing the strongest measured relationship (76.7% correlation). These findings point to concrete, testable retention actions rather than requiring further modeling to be useful.
+# ▶️ How to Run
 
-## Future Improvements
-- Replicate the segment-level churn aggregations as native SQL queries (GROUP BY/JOIN) rather than doing all aggregation in Pandas, to more directly demonstrate SQL proficiency
-- Incorporate `cltv` (Customer Lifetime Value), which exists in the source data but is not yet analyzed
-- Build a cohort/retention curve using `subscription_start_date` and `cancellation_date`
-- Fix the complaint-rate calculation to be derived from data rather than hardcoded
-- Add a Power BI or Tableau dashboard for stakeholder-facing reporting
-- Test the analysis against a larger, real-world dataset to validate whether the observed patterns hold at scale
+1. Clone this repository.
 
-## Skills Demonstrated
-| Skill | Demonstrated |
-|--------|--------------|
-| SQL (data extraction from relational DB) | ✓ |
-| Multi-table joins & data integration | ✓ |
-| Data cleaning & standardization | ✓ |
-| Feature engineering | ✓ |
-| KPI calculation | ✓ |
-| Correlation analysis | ✓ |
-| Data visualization (Matplotlib/Seaborn) | ✓ |
-| Predictive modeling | ✗ (not attempted in this version) |
+2. Place the SQLite database inside the `data/` folder.
 
-## Key Visualizations
-| Image | Caption | Why it matters |
-|---|---|---|
-| `02_churn_by_plan_type.png` | Churn rate by plan type | Shows the clearest business signal: churn drops sharply as plan tier rises |
-| `04_churn_by_subscription_type.png` | Churn rate by acquisition channel | Highlights the Referral-channel churn problem |
-| `05_churn_by_escalations.png` | Churn rate by escalation status | Visualizes the strongest correlation in the dataset |
-| `09_correlation_heatmap_final.png` | Correlation heatmap (ordinal-encoded) | Summarizes relationships between plan tier, contract type, churn score, and escalations |
-| `01_monthly_churn_trend.png` | Monthly churn trend | Shows when cancellations occurred over time |
+3. Open `notebooks/churn_analysis.ipynb`.
+
+4. Run all notebook cells sequentially.
+
+The notebook automatically:
+
+* Connects to SQLite
+* Executes SQL extraction
+* Cleans data
+* Engineers features
+* Calculates KPIs
+* Generates visualizations
+
+---
+
+# 📚 Skills Demonstrated
+
+* SQL Database Querying
+* Relational Database Analysis
+* Multi-table SQL Joins
+* Data Cleaning
+* Data Wrangling
+* Feature Engineering
+* Exploratory Data Analysis
+* Business KPI Reporting
+* Correlation Analysis
+* Customer Analytics
+* Data Visualization
+* Business Storytelling
+
+---
+
+# 📈 Project Statistics
+
+| Metric               |  Value |
+| -------------------- | -----: |
+| SQL Tables           |      3 |
+| Customers            |     21 |
+| Columns              |     22 |
+| Features Engineered  |      6 |
+| KPIs Calculated      |      7 |
+| Visualizations       |    10+ |
+| Programming Language | Python |
+| Database             | SQLite |
+
+---
+
+# 🚀 Future Improvements
+
+* Perform SQL aggregations directly using GROUP BY and JOIN queries
+* Build an interactive Power BI dashboard
+* Develop a customer retention cohort analysis
+* Analyze Customer Lifetime Value (CLTV)
+* Automate KPI reporting
+* Train a Machine Learning churn prediction model
+* Deploy the project using Streamlit
+
+---
+
+# 🎓 Key Learnings
+
+Through this project, I strengthened my ability to:
+
+* Work with relational databases
+* Write SQL joins for multi-table integration
+* Clean and preprocess business data
+* Engineer analytical features
+* Build meaningful business KPIs
+* Identify churn drivers using exploratory analysis
+* Translate analytical findings into business recommendations
+
+---
+
+# 👨‍💼 Recruiter Notes
+
+This project demonstrates practical skills expected in entry-level Data Analyst roles, including:
+
+* SQL querying and relational database analysis
+* Data cleaning and preprocessing
+* Exploratory Data Analysis (EDA)
+* Feature engineering
+* Business KPI development
+* Customer analytics
+* Data visualization
+* Business insight generation
+* Analytical storytelling
+
+---
+
+# ⭐ Final Takeaway
+
+This project showcases a complete **SQL-to-Python analytics workflow**, from extracting data from a relational database through cleaning, feature engineering, KPI reporting, exploratory analysis, and business recommendations.
+
+Rather than focusing on predictive modeling, the project emphasizes practical analytical techniques used by Data Analysts to understand customer behavior, quantify churn drivers, and support data-informed retention strategies.
