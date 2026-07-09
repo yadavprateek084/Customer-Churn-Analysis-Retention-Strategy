@@ -243,20 +243,6 @@ The following business questions were investigated:
 * How do support escalations relate to churn?
 * How do revenue and tenure vary across customer segments?
 
----
-
-# 📊 Key Visualizations
-
-| Visualization                | Preview                                       |
-| ---------------------------- | --------------------------------------------- |
-| Monthly Churn Trend          | ![](images/01_monthly_churn_trend.png)        |
-| Churn by Plan Type           | ![](images/02_churn_by_plan_type.png)         |
-| Churn by State               | ![](images/03_churn_by_state.png)             |
-| Churn by Acquisition Channel | ![](images/04_churn_by_subscription_type.png) |
-| Churn by Escalation          | ![](images/05_churn_by_escalations.png)       |
-| Churn by Gender              | ![](images/06_churn_by_gender.png)            |
-| Churn by Contract Type       | ![](images/07_churn_by_contract_type.png)     |
-| Correlation Heatmap          | ![](images/09_correlation_heatmap_final.png)  |
 
 ---
 
