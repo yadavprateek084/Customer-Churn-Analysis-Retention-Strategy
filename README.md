@@ -1,4 +1,4 @@
-# Customer Churn Analysis — SQL + Python EDA on Relational Subscription Data
+# Customer Churn Analysis and Retention Strategy — SQL + Python EDA on Relational Subscription Data
 
 ## Executive Summary
 This project analyzes customer churn for a subscription-based service by integrating data from three relational tables (customer profiles, subscription details, and support interactions) stored in a SQLite database. Using SQL for extraction and Python (Pandas, Seaborn, Matplotlib) for cleaning, feature engineering, and exploratory analysis, the project identifies which customer segments churn most and quantifies the relationship between support escalations and churn.
