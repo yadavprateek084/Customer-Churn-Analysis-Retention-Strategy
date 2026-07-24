@@ -24,6 +24,7 @@
 
 Customer churn directly impacts recurring revenue for subscription businesses. Identifying customers at risk of cancellation enables organizations to proactively improve customer experience and maximize retention.
 
+
 This project demonstrates an **end-to-end Data Analytics workflow**, beginning with extracting data from a **relational SQLite database** using **SQL**, followed by **data cleaning, feature engineering, KPI analysis, exploratory data analysis (EDA), and business recommendations** using Python.
 
 The project integrates customer profiles, subscription information, and customer support interactions to identify the major factors associated with churn.
